@@ -27,21 +27,21 @@ namespace FFmpeg.AutoGen.Native
             var fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
             return LoadNativeLibrary(fullName);
 #else
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                var fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
-                return LoadNativeLibrary(fullName);
-            }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                var fullName = Path.Combine(path, $"{libraryName}.so{version}");
-                return LoadNativeLibrary(fullName);
-            }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                var fullName = Path.Combine(path, $"{libraryName}.{version}.dylib");
-                return LoadNativeLibrary(fullName);
-            }
+			string fullName = "";
+			switch(ffmpeg.GetPlatform()){
+				case PlatformID.MacOSX:
+					fullName = Path.Combine(path, $"{libraryName}.{version}.dylib");
+					return LoadNativeLibrary(fullName);
+				case PlatformID.Win32NT:
+				case PlatformID.Win32Windows:
+				case PlatformID.Win32S:
+					fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
+					return LoadNativeLibrary(fullName);
+				case PlatformID.Unix:
+					fullName = Path.Combine(path, $"{libraryName}.so{version}");
+					return LoadNativeLibrary(fullName);
+			}
+
             throw new PlatformNotSupportedException();
 #endif
         }
@@ -66,10 +66,30 @@ namespace FFmpeg.AutoGen.Native
 #if NET45
             return WindowsNativeMethods.LoadLibrary(libraryName);
 #else
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return WindowsNativeMethods.LoadLibrary(libraryName);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return LinuxNativeMethods.dlopen(libraryName, LinuxNativeMethods.RTLD_NOW);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return MacNativeMethods.dlopen(libraryName, MacNativeMethods.RTLD_NOW);
-            throw new PlatformNotSupportedException();
+			IntPtr lib = IntPtr.Zero;
+
+			switch (ffmpeg.GetPlatform()) {
+				case PlatformID.MacOSX:
+					lib = MacNativeMethods.dlopen("lib"+libraryName, MacNativeMethods.RTLD_NOW);
+					break;
+				case PlatformID.Win32NT:
+				case PlatformID.Win32Windows:
+				case PlatformID.Win32S:
+					lib = WindowsNativeMethods.LoadLibrary(libraryName);
+					break;
+				case PlatformID.Unix:
+					//TODO: Should I add lib* on Unix too?
+					lib = LinuxNativeMethods.dlopen(libraryName, LinuxNativeMethods.RTLD_NOW);
+					break;
+				default:
+					throw new PlatformNotSupportedException();
+			}
+
+			if (lib == IntPtr.Zero) {
+				throw new Exception("Unable to load library " + libraryName);
+			}
+
+			return lib;
 #endif
         }
     }

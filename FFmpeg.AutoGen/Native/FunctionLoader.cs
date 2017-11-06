@@ -54,12 +54,17 @@ namespace FFmpeg.AutoGen.Native
 #if NET45
             return WindowsNativeMethods.GetProcAddress(nativeLibraryHandle, functionName);
 #else
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                return LinuxNativeMethods.dlsym(nativeLibraryHandle, functionName);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                return MacNativeMethods.dlsym(nativeLibraryHandle, functionName);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return WindowsNativeMethods.GetProcAddress(nativeLibraryHandle, functionName);
+			switch (ffmpeg.GetPlatform()) {
+				case PlatformID.MacOSX:
+					return MacNativeMethods.dlsym(nativeLibraryHandle, functionName);
+				case PlatformID.Win32NT:
+				case PlatformID.Win32Windows:
+				case PlatformID.Win32S:
+					return WindowsNativeMethods.GetProcAddress(nativeLibraryHandle, functionName);
+				case PlatformID.Unix:
+					return LinuxNativeMethods.dlsym(nativeLibraryHandle, functionName);
+			}
+
             throw new PlatformNotSupportedException();
 #endif
         }

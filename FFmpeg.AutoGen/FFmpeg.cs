@@ -14,6 +14,26 @@ namespace FFmpeg.AutoGen
 
         public const int EINVAL = 22;
 
+		private static PlatformID CurrentPlatform = PlatformID.Win32Windows;
+		private static bool platformSet = false;
+
+		/// <summary>
+		/// There is mono bug (macOS is displayed as Unix)
+		/// </summary>
+		/// <param name="platform">Platform.</param>
+		public static void SetPlatform(PlatformID platform){
+			CurrentPlatform = platform;
+			platformSet = true;
+		}
+
+		public static PlatformID GetPlatform(){
+			if (!platformSet){
+				throw new Exception("Use ffmpeg.SetPlatform before run");
+			}
+
+			return CurrentPlatform;
+		}
+
         static ffmpeg()
         {
             var loadedLibraries = new Dictionary<string, IntPtr>();

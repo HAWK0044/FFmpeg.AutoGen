@@ -10,7 +10,7 @@ namespace FFmpeg.AutoGen.Example
 
         internal static void RegisterFFmpegBinaries()
         {
-            switch (Environment.OSVersion.Platform)
+			switch (ffmpeg.GetPlatform())
             {
                 case PlatformID.Win32NT:
                 case PlatformID.Win32S:
@@ -38,7 +38,7 @@ namespace FFmpeg.AutoGen.Example
         }
         private static void RegisterLibrariesSearchPath(string path)
         {
-            switch (Environment.OSVersion.Platform)
+            switch (ffmpeg.GetPlatform())
             {
                 case PlatformID.Win32NT:
                 case PlatformID.Win32S:

@@ -1,113 +1,110 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace FFmpeg.AutoGen
-{
-    #pragma warning disable 169
-    
-    public unsafe struct short_array2
-    {
-        public static readonly int Size = 2;
-        fixed short _[2];
-        
-        public short this[uint i]
-        {
-            get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (short_array2* p = &this) { return p->_[i]; } }
-            set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (short_array2* p = &this) { p->_[i] = value; } }
-        }
-        public short[] ToArray()
-        {
-            fixed (short_array2* p = &this) { var a = new short[Size]; for (uint i = 0; i < Size; i++) a[i] = p->_[i]; return a; }
-        }
-        public void UpdateFrom(short[] array)
-        {
-            fixed (short_array2* p = &this) { uint i = 0; foreach(var value in array) { p->_[i++] = value; if (i >= Size) return; } }
-        }
-        public static implicit operator short[](short_array2 @struct) => @struct.ToArray();
-    }
-    
-    public unsafe struct byte_ptrArray3
-    {
-        public static readonly int Size = 3;
-        byte* _0; byte* _1; byte* _2;
-        
-        public byte* this[uint i]
-        {
-            get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { return *(p0 + i); } }
-            set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { *(p0 + i) = value;  } }
-        }
-        public byte*[] ToArray()
-        {
-            fixed (byte** p0 = &_0) { var a = new byte*[Size]; for (uint i = 0; i < Size; i++) a[i] = *(p0 + i); return a; }
-        }
+namespace FFmpeg.AutoGen {
+#pragma warning disable 169
+
+	public unsafe struct short_array2 {
+		public static readonly int Size = 2;
+		fixed short _[2];
+
+		public short this[uint i] {
+			get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (short_array2* p = &this) { return p->_[i]; } }
+			set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (short_array2* p = &this) { p->_[i] = value; } }
+		}
+		public short[] ToArray() {
+			fixed (short_array2* p = &this) { var a = new short[Size]; for (uint i = 0; i < Size; i++) a[i] = p->_[i]; return a; }
+		}
+		public void UpdateFrom(short[] array) {
+			fixed (short_array2* p = &this) { uint i = 0; foreach (var value in array) { p->_[i++] = value; if (i >= Size) return; } }
+		}
+		public static implicit operator short[] (short_array2 @struct) => @struct.ToArray();
+	}
+
+	public unsafe struct byte_ptrArray3 {
+		public static readonly int Size = 3;
+		byte* _0; byte* _1; byte* _2;
+
+		public byte* this[uint i] {
+			get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { return *(p0 + i); } }
+			set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { *(p0 + i) = value; } }
+		}
+		public byte*[] ToArray() {
+			fixed (byte** p0 = &_0) { var a = new byte*[Size]; for (uint i = 0; i < Size; i++) a[i] = *(p0 + i); return a; }
+		}
+		public void UpdateFrom(byte*[] array) {
+			fixed (byte** p0 = &_0) { uint i = 0; foreach (var value in array) { *(p0 + i++) = value; if (i >= Size) return; } }
+		}
+		public static implicit operator byte*[] (byte_ptrArray3 @struct) => @struct.ToArray();
+	}
+
+	public unsafe struct int_array3 {
+		public static readonly int Size = 3;
+		fixed int _[3];
+
+		public int this[uint i] {
+			get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (int_array3* p = &this) { return p->_[i]; } }
+			set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (int_array3* p = &this) { p->_[i] = value; } }
+		}
+		public int[] ToArray() {
+			fixed (int_array3* p = &this) { var a = new int[Size]; for (uint i = 0; i < Size; i++) a[i] = p->_[i]; return a; }
+		}
+		public void UpdateFrom(int[] array) {
+			fixed (int_array3* p = &this) { uint i = 0; foreach (var value in array) { p->_[i++] = value; if (i >= Size) return; } }
+		}
+		public static implicit operator int[] (int_array3 @struct) => @struct.ToArray();
+	}
+
+	public unsafe struct AVComponentDescriptor_array4 {
+		public static readonly int Size = 4;
+		AVComponentDescriptor _0; AVComponentDescriptor _1; AVComponentDescriptor _2; AVComponentDescriptor _3;
+
+		public AVComponentDescriptor this[uint i] {
+			get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (AVComponentDescriptor* p0 = &_0) { return *(p0 + i); } }
+			set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (AVComponentDescriptor* p0 = &_0) { *(p0 + i) = value; } }
+		}
+		public AVComponentDescriptor[] ToArray() {
+			fixed (AVComponentDescriptor* p0 = &_0) { var a = new AVComponentDescriptor[Size]; for (uint i = 0; i < Size; i++) a[i] = *(p0 + i); return a; }
+		}
+		public void UpdateFrom(AVComponentDescriptor[] array) {
+			fixed (AVComponentDescriptor* p0 = &_0) { uint i = 0; foreach (var value in array) { *(p0 + i++) = value; if (i >= Size) return; } }
+		}
+		public static implicit operator AVComponentDescriptor[] (AVComponentDescriptor_array4 @struct) => @struct.ToArray();
+	}
+
+	public unsafe struct byte_ptrArray4 {
+		public static readonly int Size = 4;
+		byte* _0; byte* _1; byte* _2; byte* _3;
+
+		public byte* this[uint i] {
+			get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { return *(p0 + i); } }
+			set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { *(p0 + i) = value; } }
+		}
+
+		/*
+		 * Fixed for IL2CPP compilation
+		 */
+		public byte*[] ToArray() {
+			var a = new byte*[Size];
+
+			fixed (byte** p0 = &_0) 
+			{
+				for (uint i = 0; i < Size; i++) 
+					a[i] = (byte*)(*(byte*)((byte*)p0 + i));
+			}
+
+			return a;
+		}
+
         public void UpdateFrom(byte*[] array)
         {
             fixed (byte** p0 = &_0) { uint i = 0; foreach(var value in array) { *(p0 + i++) = value; if (i >= Size) return; } }
         }
-        public static implicit operator byte*[](byte_ptrArray3 @struct) => @struct.ToArray();
-    }
-    
-    public unsafe struct int_array3
-    {
-        public static readonly int Size = 3;
-        fixed int _[3];
-        
-        public int this[uint i]
-        {
-            get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (int_array3* p = &this) { return p->_[i]; } }
-            set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (int_array3* p = &this) { p->_[i] = value; } }
-        }
-        public int[] ToArray()
-        {
-            fixed (int_array3* p = &this) { var a = new int[Size]; for (uint i = 0; i < Size; i++) a[i] = p->_[i]; return a; }
-        }
-        public void UpdateFrom(int[] array)
-        {
-            fixed (int_array3* p = &this) { uint i = 0; foreach(var value in array) { p->_[i++] = value; if (i >= Size) return; } }
-        }
-        public static implicit operator int[](int_array3 @struct) => @struct.ToArray();
-    }
-    
-    public unsafe struct AVComponentDescriptor_array4
-    {
-        public static readonly int Size = 4;
-        AVComponentDescriptor _0; AVComponentDescriptor _1; AVComponentDescriptor _2; AVComponentDescriptor _3;
-        
-        public AVComponentDescriptor this[uint i]
-        {
-            get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (AVComponentDescriptor* p0 = &_0) { return *(p0 + i); } }
-            set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (AVComponentDescriptor* p0 = &_0) { *(p0 + i) = value;  } }
-        }
-        public AVComponentDescriptor[] ToArray()
-        {
-            fixed (AVComponentDescriptor* p0 = &_0) { var a = new AVComponentDescriptor[Size]; for (uint i = 0; i < Size; i++) a[i] = *(p0 + i); return a; }
-        }
-        public void UpdateFrom(AVComponentDescriptor[] array)
-        {
-            fixed (AVComponentDescriptor* p0 = &_0) { uint i = 0; foreach(var value in array) { *(p0 + i++) = value; if (i >= Size) return; } }
-        }
-        public static implicit operator AVComponentDescriptor[](AVComponentDescriptor_array4 @struct) => @struct.ToArray();
-    }
-    
-    public unsafe struct byte_ptrArray4
-    {
-        public static readonly int Size = 4;
-        byte* _0; byte* _1; byte* _2; byte* _3;
-        
-        public byte* this[uint i]
-        {
-            get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { return *(p0 + i); } }
-            set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { *(p0 + i) = value;  } }
-        }
-        public byte*[] ToArray()
-        {
-            fixed (byte** p0 = &_0) { var a = new byte*[Size]; for (uint i = 0; i < Size; i++) a[i] = *(p0 + i); return a; }
-        }
-        public void UpdateFrom(byte*[] array)
-        {
-            fixed (byte** p0 = &_0) { uint i = 0; foreach(var value in array) { *(p0 + i++) = value; if (i >= Size) return; } }
-        }
-        public static implicit operator byte*[](byte_ptrArray4 @struct) => @struct.ToArray();
+		
+		public static implicit operator byte*[](byte_ptrArray4 @struct)
+		{
+			return @struct.ToArray();	
+		}
     }
     
     public unsafe struct int_array4
@@ -246,10 +243,21 @@ namespace FFmpeg.AutoGen
             get { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { return *(p0 + i); } }
             set { if (i >= Size) throw new ArgumentOutOfRangeException(); fixed (byte** p0 = &_0) { *(p0 + i) = value;  } }
         }
-        public byte*[] ToArray()
-        {
-            fixed (byte** p0 = &_0) { var a = new byte*[Size]; for (uint i = 0; i < Size; i++) a[i] = *(p0 + i); return a; }
-        }
+
+		/*
+		 * Fixed for IL2CPP compilation
+		 */
+		public byte*[] ToArray() {
+			var a = new byte*[Size];
+
+			fixed (byte** p0 = &_0) {
+				for (uint i = 0; i < Size; i++)
+					a[i] = (byte*)(*(byte*)((byte*)p0 + i));
+			}
+
+			return a;
+		}
+
         public void UpdateFrom(byte*[] array)
         {
             fixed (byte** p0 = &_0) { uint i = 0; foreach(var value in array) { *(p0 + i++) = value; if (i >= Size) return; } }

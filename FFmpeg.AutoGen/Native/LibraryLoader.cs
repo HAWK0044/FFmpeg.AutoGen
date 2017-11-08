@@ -28,17 +28,33 @@ namespace FFmpeg.AutoGen.Native
             return LoadNativeLibrary(fullName);
 #else
 			string fullName = "";
+			IntPtr libPtr = IntPtr.Zero;
 			switch(ffmpeg.GetPlatform()){
-				case PlatformID.MacOSX:
+				case FFMpegPlatform.macOS:
 					fullName = Path.Combine(path, $"{libraryName}.{version}.dylib");
+
+					libPtr = LoadNativeLibrary(fullName);
+
+					if (libPtr != IntPtr.Zero)
+						return libPtr;
+
+					fullName = Path.Combine(path, $"{libraryName}.{version}.bundle");
 					return LoadNativeLibrary(fullName);
-				case PlatformID.Win32NT:
-				case PlatformID.Win32Windows:
-				case PlatformID.Win32S:
+				case FFMpegPlatform.windows:
 					fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
 					return LoadNativeLibrary(fullName);
-				case PlatformID.Unix:
+				case FFMpegPlatform.unix:
 					fullName = Path.Combine(path, $"{libraryName}.so{version}");
+					return LoadNativeLibrary(fullName);
+				case FFMpegPlatform.iOS:
+					fullName = Path.Combine(path, $"{libraryName}.{version}.dylib");
+
+					libPtr = LoadNativeLibrary(fullName);
+
+					if (libPtr != IntPtr.Zero)
+						return libPtr;
+
+					fullName = Path.Combine(path, $"{libraryName}.{version}.bundle");
 					return LoadNativeLibrary(fullName);
 			}
 
@@ -69,17 +85,18 @@ namespace FFmpeg.AutoGen.Native
 			IntPtr lib = IntPtr.Zero;
 
 			switch (ffmpeg.GetPlatform()) {
-				case PlatformID.MacOSX:
+				case FFMpegPlatform.macOS:
 					lib = MacNativeMethods.dlopen("lib"+libraryName, MacNativeMethods.RTLD_NOW);
 					break;
-				case PlatformID.Win32NT:
-				case PlatformID.Win32Windows:
-				case PlatformID.Win32S:
+				case FFMpegPlatform.windows:
 					lib = WindowsNativeMethods.LoadLibrary(libraryName);
 					break;
-				case PlatformID.Unix:
+				case FFMpegPlatform.unix:
 					//TODO: Should I add lib* on Unix too?
 					lib = LinuxNativeMethods.dlopen(libraryName, LinuxNativeMethods.RTLD_NOW);
+					break;
+				case FFMpegPlatform.iOS:
+					lib = iOSNativeMethods.dlopen("lib" + libraryName, MacNativeMethods.RTLD_NOW);
 					break;
 				default:
 					throw new PlatformNotSupportedException();

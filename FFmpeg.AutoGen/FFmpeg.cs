@@ -5,6 +5,7 @@ using FFmpeg.AutoGen.Native;
 namespace FFmpeg.AutoGen
 {
     public delegate IntPtr GetOrLoadLibrary(string libraryName, int version);
+    public delegate bool CloseLibrary(string libraryName, int version);
 
     public static partial class ffmpeg
     {
@@ -46,9 +47,21 @@ namespace FFmpeg.AutoGen
                 loadedLibraries.Add(key, ptr);
                 return ptr;
             };
+
+            CloseLibrary = (name, version) => {
+                var key = $"{name}{version}";
+                bool ret = false;
+                if (loadedLibraries.TryGetValue(key, out var ptr)){
+                    ret = LibraryLoader.UnloadLibrary(ptr);
+                    loadedLibraries.Remove(key);
+                }
+
+                return ret;
+            };
         }
 
         public static GetOrLoadLibrary GetOrLoadLibrary { get; set; }
+        public static CloseLibrary CloseLibrary { get; set; }
 
         public static T GetFunctionDelegate<T>(IntPtr libraryHandle, string functionName)
             => FunctionLoader.GetFunctionDelegate<T>(libraryHandle, functionName);

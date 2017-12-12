@@ -62,6 +62,29 @@ namespace FFmpeg.AutoGen.Native
 #endif
         }
 
+        public static bool UnloadLibrary(IntPtr handle) {
+            if (handle == IntPtr.Zero)
+                return false;
+
+            switch (ffmpeg.GetPlatform()) {
+                case FFMpegPlatform.macOS:
+                    //lib = MacNativeMethods.dlopen("lib" + libraryName, MacNativeMethods.RTLD_NOW);
+                    return MacNativeMethods.dlclose(handle) == 0;
+                case FFMpegPlatform.windows:
+                    return WindowsNativeMethods.FreeLibrary(handle);
+                case FFMpegPlatform.unix:
+                    return LinuxNativeMethods.dlclose(handle) == 0;
+                //case FFMpegPlatform.iOS:
+                    //return false;
+                    //lib = iOSNativeMethods.dlopen("lib" + libraryName, MacNativeMethods.RTLD_NOW);
+                    //break;
+                default:
+                    throw new PlatformNotSupportedException();
+            }
+
+            throw new PlatformNotSupportedException();
+        }
+
         /// <summary>
         ///     Attempts to load a native library.
         /// </summary>

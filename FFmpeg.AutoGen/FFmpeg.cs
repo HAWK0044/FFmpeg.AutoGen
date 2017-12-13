@@ -48,6 +48,7 @@ namespace FFmpeg.AutoGen
                 return ptr;
             };
 
+            
             CloseLibrary = (name, version) => {
                 var key = $"{name}{version}";
                 bool ret = false;

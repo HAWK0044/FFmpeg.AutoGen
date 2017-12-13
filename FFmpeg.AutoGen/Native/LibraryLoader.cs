@@ -32,13 +32,24 @@ namespace FFmpeg.AutoGen.Native
 			switch(ffmpeg.GetPlatform()){
 				case FFMpegPlatform.macOS:
 					fullName = Path.Combine(path, $"{libraryName}.{version}.dylib");
-
 					libPtr = LoadNativeLibrary(fullName);
 
 					if (libPtr != IntPtr.Zero)
 						return libPtr;
+                    
+                    fullName = Path.Combine(path, $"{libraryName}.{version}.bundle");
+                    libPtr = LoadNativeLibrary(fullName);
 
-					fullName = Path.Combine(path, $"{libraryName}.{version}.bundle");
+                    if (libPtr != IntPtr.Zero)
+                        return libPtr;
+
+                    fullName = Path.Combine(path, $"lib{libraryName}.{version}.bundle");
+                    libPtr = LoadNativeLibrary(fullName);
+
+                    if (libPtr != IntPtr.Zero)
+                        return libPtr;
+                    
+					fullName = Path.Combine(path, $"lib{libraryName}.{version}.dylib");
 					return LoadNativeLibrary(fullName);
 				case FFMpegPlatform.windows:
 					fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
@@ -109,7 +120,7 @@ namespace FFmpeg.AutoGen.Native
 
 			switch (ffmpeg.GetPlatform()) {
 				case FFMpegPlatform.macOS:
-					lib = MacNativeMethods.dlopen("lib"+libraryName, MacNativeMethods.RTLD_NOW);
+                    lib = MacNativeMethods.dlopen("libff" + libraryName, MacNativeMethods.RTLD_NOW);
 					break;
 				case FFMpegPlatform.windows:
 					lib = WindowsNativeMethods.LoadLibrary(libraryName);

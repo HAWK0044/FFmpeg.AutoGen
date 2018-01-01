@@ -53,7 +53,19 @@ namespace FFmpeg.AutoGen.Native
 					return LoadNativeLibrary(fullName);
 				case FFMpegPlatform.windows:
 					fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
-					return LoadNativeLibrary(fullName);
+					libPtr = LoadNativeLibrary(fullName);
+
+                    if(libPtr != IntPtr.Zero){
+                        return libPtr;
+                    }
+
+                    fullName = Path.Combine(path, $"{libraryName}-{version}");
+                    libPtr = LoadNativeLibrary(fullName);
+
+                    if (libPtr != IntPtr.Zero) {
+                        return libPtr;
+                    }
+                    break;
 				case FFMpegPlatform.unix:
 					fullName = Path.Combine(path, $"{libraryName}.so{version}");
 					return LoadNativeLibrary(fullName);
@@ -69,6 +81,13 @@ namespace FFmpeg.AutoGen.Native
 					return LoadNativeLibrary(fullName);
 			}
 
+            if(libPtr == IntPtr.Zero){
+                if(ffmpeg.GetPlatform() == FFMpegPlatform.windows){
+                    throw new Exception("Unable to load " + fullName + " load error " + Marshal.GetLastWin32Error());
+                }
+
+                throw new Exception("Unable to load " + fullName);
+            }
             throw new PlatformNotSupportedException();
 #endif
         }
@@ -136,9 +155,15 @@ namespace FFmpeg.AutoGen.Native
 					throw new PlatformNotSupportedException();
 			}
 
+            /*
 			if (lib == IntPtr.Zero) {
+                if(ffmpeg.GetPlatform() == FFMpegPlatform.windows){
+                    var winErr = Marshal.GetLastWin32Error();
+                    throw new Exception("Unable to load library " + libraryName + " error code " + winErr);
+                }
 				throw new Exception("Unable to load library " + libraryName);
 			}
+            */
 
 			return lib;
 #endif

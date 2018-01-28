@@ -108,9 +108,9 @@ namespace FFmpeg.AutoGen
     public unsafe struct AVFrame
     {
         /// <summary>pointer to the picture/channel planes. This might be different from the first allocated byte</summary>
-        public byte_ptrArray8 @data;
+        public byte_ptrArray4 @data;
         /// <summary>For video, size in bytes of each picture line. For audio, size in bytes of each plane.</summary>
-        public int_array8 @linesize;
+        public int_array4 @linesize;
         /// <summary>pointers to the data planes/channels.</summary>
         public byte** @extended_data;
         /// <summary>width and height of the video frame</summary>

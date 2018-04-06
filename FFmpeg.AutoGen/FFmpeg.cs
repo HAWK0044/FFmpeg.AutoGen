@@ -15,6 +15,8 @@ namespace FFmpeg.AutoGen
 
         public const int EINVAL = 22;
 
+        static string abs_path = string.Empty;
+
 		private static FFMpegPlatform CurrentPlatform = FFMpegPlatform.windows;
 		private static bool platformSet = false;
 
@@ -26,6 +28,14 @@ namespace FFmpeg.AutoGen
 			CurrentPlatform = platform;
 			platformSet = true;
 		}
+
+        public static void SetAbsolutePath(string path){
+            abs_path = path;
+        }
+
+        public static string GetAbsolutePath(){
+            return abs_path;
+        }
 
 		public static FFMpegPlatform GetPlatform(){
 			if (!platformSet){
@@ -42,8 +52,10 @@ namespace FFmpeg.AutoGen
             GetOrLoadLibrary = (name, version) =>
             {
                 var key = $"{name}{version}";
-                if (loadedLibraries.TryGetValue(key, out var ptr)) return ptr;
-                ptr = LibraryLoader.LoadNativeLibraryUsingPlatformNamingConvention(string.Empty, name, version);
+                if (loadedLibraries.TryGetValue(key, out var ptr)) 
+                    return ptr;
+                
+                ptr = LibraryLoader.LoadNativeLibraryUsingPlatformNamingConvention(abs_path, name, version);
                 loadedLibraries.Add(key, ptr);
                 return ptr;
             };

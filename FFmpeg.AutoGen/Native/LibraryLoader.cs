@@ -23,34 +23,17 @@ namespace FFmpeg.AutoGen.Native
         /// </remarks>
         public static IntPtr LoadNativeLibraryUsingPlatformNamingConvention(string path, string libraryName, int version)
         {
-#if NET45
-            var fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
-            return LoadNativeLibrary(fullName);
-#else
 			string fullName = "";
 			IntPtr libPtr = IntPtr.Zero;
 			switch(ffmpeg.GetPlatform()){
 				case FFMpegPlatform.macOS:
-					fullName = Path.Combine(path, $"{libraryName}.{version}.dylib");
+					fullName = Path.Combine(path, $"libff{libraryName}.{version}.dylib");
 					libPtr = LoadNativeLibrary(fullName);
 
-					if (libPtr != IntPtr.Zero)
-						return libPtr;
-                    
-                    fullName = Path.Combine(path, $"{libraryName}.{version}.bundle");
-                    libPtr = LoadNativeLibrary(fullName);
-
-                    if (libPtr != IntPtr.Zero)
-                        return libPtr;
-
-                    fullName = Path.Combine(path, $"lib{libraryName}.{version}.bundle");
-                    libPtr = LoadNativeLibrary(fullName);
-
                     if (libPtr != IntPtr.Zero)
                         return libPtr;
                     
-					fullName = Path.Combine(path, $"lib{libraryName}.{version}.dylib");
-					return LoadNativeLibrary(fullName);
+                    break;
 				case FFMpegPlatform.windows:
 					fullName = Path.Combine(path, $"{libraryName}-{version}.dll");
 					libPtr = LoadNativeLibrary(fullName);
@@ -86,10 +69,10 @@ namespace FFmpeg.AutoGen.Native
                     throw new Exception("Unable to load " + fullName + " load error " + Marshal.GetLastWin32Error());
                 }
 
-                throw new Exception("Unable to load " + fullName);
+                throw new Exception(string.Format("Unable to load {0}, loading error {1}", fullName, Marshal.PtrToStringAuto(MacNativeMethods.dlerror())));
             }
+
             throw new PlatformNotSupportedException();
-#endif
         }
 
         public static bool UnloadLibrary(IntPtr handle) {
@@ -139,7 +122,7 @@ namespace FFmpeg.AutoGen.Native
 
 			switch (ffmpeg.GetPlatform()) {
 				case FFMpegPlatform.macOS:
-                    lib = MacNativeMethods.dlopen("libff" + libraryName, MacNativeMethods.RTLD_NOW);
+                    lib = MacNativeMethods.dlopen(libraryName, MacNativeMethods.RTLD_NOW);
 					break;
 				case FFMpegPlatform.windows:
 					lib = WindowsNativeMethods.LoadLibrary(libraryName);
